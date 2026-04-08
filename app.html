@@ -7,23 +7,20 @@
 <body>
 
 <script>
-const user = localStorage.getItem("user");
-const approved = JSON.parse(localStorage.getItem("approved") || "[]");
-
-if (!user || !approved.includes(user)) {
-  alert("Acesso negado");
+if (localStorage.getItem("auth") !== "true") {
+  alert("Acesso não autorizado");
   window.location.href = "index.html";
 }
 </script>
 
-<h1>Bem-vindo ao SolarSense 🚀</h1>
-<p>Área protegida da plataforma</p>
+<h1>Bem-vindo à plataforma SolarSense 🚀</h1>
+<p>Área interna da equipe</p>
 
 <button onclick="logout()">Logout</button>
 
 <script>
 function logout() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("auth");
   window.location.href = "index.html";
 }
 </script>
