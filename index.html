@@ -11,94 +11,76 @@ body {
   background: #0d1117;
   color: white;
   text-align: center;
-  padding: 40px;
+  padding: 60px;
 }
 
-button {
-  padding: 12px 20px;
-  background: #2d9c6e;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 8px;
+.container {
+  max-width: 400px;
+  margin: auto;
+  background: #141b24;
+  padding: 30px;
+  border-radius: 12px;
 }
 
 input {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  width: 250px;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #2d9c6e;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #3dbf88;
 }
 </style>
 </head>
 
 <body>
 
-<h1>SolarSense</h1>
-<p>Monitoramento inteligente para sistemas fotovoltaicos</p>
+<div class="container">
+  <h1>SolarSense</h1>
+  <p>Acesso restrito à equipe</p>
 
-<button onclick="openModal()">Acessar plataforma</button>
+  <input type="password" id="password" placeholder="Digite a senha">
 
-<!-- MODAL -->
-<div id="modal" style="display:none; margin-top:30px;">
-
-  <h2>Solicitar acesso</h2>
-
-  <input type="text" id="name" placeholder="Seu nome">
-  <input type="email" id="email" placeholder="Email">
-  <input type="text" id="company" placeholder="Empresa">
-
-  <button onclick="requestAccess()">Solicitar acesso</button>
   <button onclick="login()">Entrar</button>
 
+  <p id="error" style="color:red; display:none;">Senha incorreta</p>
 </div>
 
 <script>
 
-function openModal() {
-  document.getElementById("modal").style.display = "block";
-}
+// 🔑 DEFINE YOUR TEAM PASSWORD HERE
+const SYSTEM_PASSWORD = "solarsense2026";
 
-// REQUEST ACCESS
-function requestAccess() {
-
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const company = document.getElementById("company").value;
-
-  if (!name || !email || !company) {
-    alert("Preencha todos os campos");
-    return;
-  }
-
-  let requests = JSON.parse(localStorage.getItem("requests") || "[]");
-
-  requests.push({
-    name,
-    email,
-    company,
-    status: "pending"
-  });
-
-  localStorage.setItem("requests", JSON.stringify(requests));
-
-  alert("Solicitação enviada!");
-}
-
-// LOGIN
+// LOGIN FUNCTION
 function login() {
+  const input = document.getElementById("password").value;
 
-  const email = document.getElementById("email").value;
-
-  let approved = JSON.parse(localStorage.getItem("approved") || "[]");
-
-  if (approved.includes(email)) {
-    localStorage.setItem("user", email);
+  if (input === SYSTEM_PASSWORD) {
+    localStorage.setItem("auth", "true");
     window.location.href = "app.html";
   } else {
-    alert("Acesso não aprovado ainda.");
+    document.getElementById("error").style.display = "block";
   }
 }
+
+// ENTER KEY SUPPORT
+document.getElementById("password").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") login();
+});
 
 </script>
 
