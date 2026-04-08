@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SolarSense Platform</title>
+</head>
+
+<body>
+
+<script>
+const user = localStorage.getItem("user");
+const approved = JSON.parse(localStorage.getItem("approved") || "[]");
+
+if (!user || !approved.includes(user)) {
+  alert("Acesso negado");
+  window.location.href = "index.html";
+}
+</script>
+
+<h1>Bem-vindo ao SolarSense 🚀</h1>
+<p>Área protegida da plataforma</p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
