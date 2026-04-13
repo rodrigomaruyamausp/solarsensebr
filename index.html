@@ -640,6 +640,62 @@
       .hero-cta { flex-direction: column; }
       .btn-hero, .btn-hero-outline { width: 100%; justify-content: center; }
     }
+
+    /* ── PLATAFORMA MOBILE ── */
+    #plataforma_mobile { padding: 100px 0; background: var(--dark);}
+    .mobile-compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .mobile-compare-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .mobile-compare-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 99px;
+    }
+    .mobile-label-bad {
+      background: rgba(232,76,76,.12);
+      border: 1px solid rgba(232,76,76,.25);
+      color: #e84c4c;
+    }
+    .mobile-label-good {
+      background: rgba(45,156,110,.12);
+      border: 1px solid rgba(45,156,110,.25);
+      color: var(--green-light);
+    }
+    .mobile-frame-wrap {
+      width: 100%;
+      max-width: 380px;
+      height: 640px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(0,0,0,.45);
+      position: relative;
+    }
+    .mobile-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    @media (max-width: 860px) {
+      .mobile-compare-grid { grid-template-columns: 1fr; gap: 40px; }
+      .mobile-frame-wrap { max-width: 100%; height: 580px; }
+    }
   </style>
 </head>
 <body>
@@ -841,35 +897,31 @@
   </div>
 </section>
 
-<!-- ══ LEAD FORM ══ -->
-<section id="interesse">
+<!-- ══ MOBILE PLATFORM ══ -->
+<section id="plataforma_mobile">
   <div class="container">
-    <div class="form-wrap">
-      <div class="form-badge reveal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Lista de interesse
+    <div class="section-header">
+      <p class="section-label reveal">Plataforma Mobile</p>
+      <h2 class="reveal reveal-delay-1">Monitore seus painéis<br>na palma da mão</h2>
+      <p class="section-sub reveal reveal-delay-2">Compare em tempo real o desempenho de sistemas com e sem monitoramento inteligente. Identifique falhas antes que causem prejuízo.</p>
+    </div>
+    <div class="mobile-compare-grid reveal reveal-delay-1">
+      <div class="mobile-compare-col">
+        <div class="mobile-compare-label mobile-label-bad">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Baixa Performance
+        </div>
+        <div class="mobile-frame-wrap">
+          <iframe src="monitor-bad.html" title="Monitor com baixa eficiência" scrolling="yes" loading="lazy"></iframe>
+        </div>
       </div>
-      <h2 class="reveal">Seja um dos primeiros<br>a testar</h2>
-      <p class="section-sub reveal">O SolarSense ainda está em desenvolvimento. Cadastre-se para receber novidades e ter acesso antecipado quando lançarmos.</p>
-      <p class="form-note reveal">Projeto em estágio inicial — estamos validando o interesse do mercado.</p>
-
-      <div id="lead-form-wrap">
-        <form id="lead-form" onsubmit="submitLead(event)" class="reveal">
-          <div class="form-group">
-            <label for="lead-name">Nome</label>
-            <input type="text" id="lead-name" placeholder="Seu nome completo" required />
-          </div>
-          <div class="form-group">
-            <label for="lead-email">E-mail</label>
-            <input type="email" id="lead-email" placeholder="seu@email.com" required />
-          </div>
-          <button type="submit" class="btn-submit">Entrar na lista de espera</button>
-          <p class="form-disclaimer">Seus dados não serão compartilhados. Usaremos apenas para informar sobre o lançamento.</p>
-        </form>
-        <div class="success-box" id="lead-success">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <h3>Cadastro realizado!</h3>
-          <p id="lead-success-msg">Obrigado! Entraremos em contato assim que tivermos novidades.</p>
+      <div class="mobile-compare-col">
+        <div class="mobile-compare-label mobile-label-good">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Boa Performance
+        </div>
+        <div class="mobile-frame-wrap">
+          <iframe src="monitor-good.html" title="Monitor com alta eficiência" scrolling="yes" loading="lazy"></iframe>
         </div>
       </div>
     </div>
@@ -927,6 +979,42 @@
             <h3>Perícia e Laudos</h3>
             <p>Especialistas tem a oportunidade de validar suas perícias e laudos com informações aceitas judicialmente.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ LEAD FORM ══ -->
+<section id="interesse">
+  <div class="container">
+    <div class="form-wrap">
+      <div class="form-badge reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Lista de interesse
+      </div>
+      <h2 class="reveal">Seja um dos primeiros<br>a testar</h2>
+      <p class="section-sub reveal">O SolarSense ainda está em desenvolvimento. Cadastre-se para receber novidades e ter acesso antecipado quando lançarmos.</p>
+      <p class="form-note reveal">Projeto em estágio inicial — estamos validando o interesse do mercado.</p>
+
+      <div id="lead-form-wrap">
+        <form id="lead-form" onsubmit="submitLead(event)" class="reveal">
+          <div class="form-group">
+            <label for="lead-name">Nome</label>
+            <input type="text" id="lead-name" placeholder="Seu nome completo" required />
+          </div>
+          <div class="form-group">
+            <label for="lead-email">E-mail</label>
+            <input type="email" id="lead-email" placeholder="seu@email.com" required />
+          </div>
+          <button type="submit" class="btn-submit">Entrar na lista de espera</button>
+          <p class="form-disclaimer">Seus dados não serão compartilhados. Usaremos apenas para informar sobre o lançamento.</p>
+        </form>
+        <div class="success-box" id="lead-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <h3>Cadastro realizado!</h3>
+          <p id="lead-success-msg">Obrigado! Entraremos em contato assim que tivermos novidades.</p>
         </div>
       </div>
     </div>
