@@ -26,7 +26,6 @@
     }
 
     html { scroll-behavior: smooth; }
-
     body {
       font-family: var(--font-body);
       background: var(--dark);
@@ -34,17 +33,125 @@
       line-height: 1.6;
       overflow-x: hidden;
     }
-
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: .4;
+      pointer-events: none; z-index: 0; opacity: .4;
     }
 
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--dark);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      transition: opacity .4s ease, visibility .4s ease;
+    }
+    #gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #gate::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: .4;
+    }
+    .gate-glow {
+      position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,156,110,.14) 0%, transparent 70%);
+      top: -100px; right: -50px; pointer-events: none;
+    }
+    .gate-glow-2 {
+      position: absolute; width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(240,163,35,.07) 0%, transparent 70%);
+      bottom: 60px; left: 0; pointer-events: none;
+    }
+    .gate-card {
+      position: relative;
+      background: var(--dark-3); border: 1px solid var(--border); border-radius: 20px;
+      padding: 48px 40px; max-width: 400px; width: 100%; text-align: center;
+      animation: gateIn .5s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes gateIn {
+      from { opacity: 0; transform: translateY(28px) scale(.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .gate-logo {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 1.25rem; font-weight: 700; color: var(--text); margin-bottom: 32px;
+    }
+    .gate-logo svg { color: var(--green); }
+    .gate-lock {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--green-dim); border: 1px solid rgba(45,156,110,.25);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+    }
+    .gate-lock svg { color: var(--green-light); width: 24px; height: 24px; }
+    .gate-card h1 {
+      font-size: 1.35rem; font-weight: 700; letter-spacing: -.01em;
+      color: var(--text); margin-bottom: 8px; line-height: 1.2;
+    }
+    .gate-card p { font-size: .875rem; color: var(--muted); margin-bottom: 28px; line-height: 1.65; }
+    .gate-input-wrap { position: relative; margin-bottom: 14px; text-align: left; }
+    .gate-input-wrap label {
+      display: block; font-size: .8rem; font-weight: 500; color: var(--muted);
+      margin-bottom: 6px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .gate-input-row { position: relative; }
+    #gate-password {
+      width: 100%; padding: 12px 44px 12px 14px; border-radius: 10px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body); font-size: .95rem;
+      outline: none; transition: border-color .2s, background .2s, box-shadow .2s;
+      letter-spacing: .05em;
+    }
+    #gate-password:focus {
+      border-color: var(--green); background: rgba(45,156,110,.06);
+      box-shadow: 0 0 0 3px rgba(45,156,110,.12);
+    }
+    #gate-password.error {
+      border-color: #e05252; background: rgba(224,82,82,.06);
+      box-shadow: 0 0 0 3px rgba(224,82,82,.1); animation: shake .35s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); } 20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
+    }
+    .toggle-vis {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      padding: 4px; display: flex; align-items: center; transition: color .2s;
+    }
+    .toggle-vis:hover { color: var(--text); }
+    .toggle-vis svg { width: 16px; height: 16px; display: block; }
+    #gate-error {
+      font-size: .8rem; color: #e07070; text-align: left; margin-bottom: 14px;
+      min-height: 18px; display: flex; align-items: center; gap: 6px;
+      opacity: 0; transition: opacity .2s;
+    }
+    #gate-error.show { opacity: 1; }
+    #gate-error svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .gate-btn {
+      width: 100%; padding: 13px; border-radius: 10px;
+      background: var(--green); color: #fff; font-family: var(--font-body);
+      font-size: .95rem; font-weight: 600; border: none; cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 0 28px rgba(45,156,110,.2);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .gate-btn:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 0 40px rgba(45,156,110,.3); }
+    .gate-btn:active { transform: translateY(0); }
+    .gate-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .gate-btn svg { width: 16px; height: 16px; }
+    .gate-attempts { font-size: .75rem; color: var(--muted); margin-top: 16px; }
+    .gate-attempts span { color: #e07070; }
+    .aes-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .7rem; color: var(--muted); margin-top: 18px;
+      border: 1px solid var(--border); border-radius: 99px; padding: 4px 12px;
+    }
+    .aes-badge svg { width: 12px; height: 12px; color: var(--green); }
+
+    /* ── PAGE CONTENT ── */
+    #page-content { display: none; }
+    #page-content.visible { display: block; }
 
     /* ── UTILITY ── */
     .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
@@ -53,171 +160,54 @@
     /* ── NAVBAR ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 64px;
-      background: rgba(13,17,23,.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center;
+      height: 64px; background: rgba(13,17,23,.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); display: flex; align-items: center;
     }
     nav .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-    .nav-logo {
-      display: flex; align-items: center; gap: 8px;
-      font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
-      color: var(--text); text-decoration: none;
-    }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
     .nav-logo svg { color: var(--green); }
     .nav-links { display: flex; align-items: center; gap: 32px; }
-    .nav-links a {
-      font-size: .875rem; color: var(--muted); text-decoration: none;
-      transition: color .2s;
-    }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
     .nav-links a:hover { color: var(--text); }
     .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .btn-ghost {
-      font-family: var(--font-body); font-size: .875rem; font-weight: 500;
-      color: var(--muted); background: none; border: none; cursor: pointer;
-      padding: 8px 14px; border-radius: 8px; transition: color .2s, background .2s;
-    }
+    .btn-ghost { font-family: var(--font-body); font-size: .875rem; font-weight: 500; color: var(--muted); background: none; border: none; cursor: pointer; padding: 8px 14px; border-radius: 8px; transition: color .2s, background .2s; }
     .btn-ghost:hover { color: var(--text); background: var(--card); }
-    .btn-primary {
-      font-family: var(--font-body); font-size: .875rem; font-weight: 600;
-      color: #fff; background: var(--green); border: none; cursor: pointer;
-      padding: 9px 18px; border-radius: 8px;
-      transition: background .2s, transform .15s;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-    }
+    .btn-primary { font-family: var(--font-body); font-size: .875rem; font-weight: 600; color: #fff; background: var(--green); border: none; cursor: pointer; padding: 9px 18px; border-radius: 8px; transition: background .2s, transform .15s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary:hover { background: var(--green-light); transform: translateY(-1px); }
-    .btn-outline {
-      font-family: var(--font-body); font-size: .875rem; font-weight: 500;
-      color: var(--text); background: transparent;
-      border: 1px solid var(--border); cursor: pointer;
-      padding: 9px 18px; border-radius: 8px;
-      transition: border-color .2s, background .2s, transform .15s;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-    }
+    .btn-outline { font-family: var(--font-body); font-size: .875rem; font-weight: 500; color: var(--text); background: transparent; border: 1px solid var(--border); cursor: pointer; padding: 9px 18px; border-radius: 8px; transition: border-color .2s, background .2s, transform .15s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
     .btn-outline:hover { border-color: rgba(255,255,255,.2); background: var(--card); transform: translateY(-1px); }
-    .hamburger {
-      display: none; background: none; border: none; color: var(--text);
-      cursor: pointer; padding: 4px;
-    }
-    .mobile-menu {
-      display: none; position: fixed; top: 64px; left: 0; right: 0;
-      background: var(--dark-2); border-bottom: 1px solid var(--border);
-      padding: 16px 24px; z-index: 99;
-    }
+    .hamburger { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 4px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--dark-2); border-bottom: 1px solid var(--border); padding: 16px 24px; z-index: 99; }
     .mobile-menu.open { display: block; }
-    .mobile-menu a, .mobile-menu button {
-      display: block; padding: 12px 0; color: var(--muted);
-      text-decoration: none; font-size: .9rem; border-bottom: 1px solid var(--border);
-      background: none; border-left: none; border-right: none; border-top: none;
-      cursor: pointer; width: 100%; text-align: left; font-family: var(--font-body);
-    }
+    .mobile-menu a, .mobile-menu button { display: block; padding: 12px 0; color: var(--muted); text-decoration: none; font-size: .9rem; border-bottom: 1px solid var(--border); background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; width: 100%; text-align: left; font-family: var(--font-body); }
     .mobile-menu a:last-child { border-bottom: none; }
     .mobile-menu a:hover, .mobile-menu button:hover { color: var(--text); }
-    .mobile-btn-primary {
-      margin-top: 12px; width: 100%; text-align: center;
-      padding: 12px; border-radius: 8px;
-      background: var(--green); color: #fff; font-weight: 600;
-      cursor: pointer; border: none; font-family: var(--font-body); font-size: .9rem;
-    }
+    .mobile-btn-primary { margin-top: 12px; width: 100%; text-align: center; padding: 12px; border-radius: 8px; background: var(--green); color: #fff; font-weight: 600; cursor: pointer; border: none; font-family: var(--font-body); font-size: .9rem; }
 
     /* ── HERO ── */
-    #hero {
-      position: relative; min-height: 100vh;
-      display: flex; align-items: center;
-      overflow: hidden; padding-top: 64px;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #0d1117 0%, #0f2030 50%, #0d1117 100%);
-    }
-    .hero-glow {
-      position: absolute; width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(45,156,110,.18) 0%, transparent 70%);
-      top: -100px; right: -100px; pointer-events: none;
-    }
-    .hero-glow-2 {
-      position: absolute; width: 400px; height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(240,163,35,.08) 0%, transparent 70%);
-      bottom: 0; left: 200px; pointer-events: none;
-    }
-    .hero-content {
-      position: relative; z-index: 1;
-      max-width: 720px; padding: 80px 0 60px;
-    }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-dim); border: 1px solid rgba(45,156,110,.3);
-      color: #6eddb3; font-size: .8rem; font-weight: 500;
-      padding: 6px 14px; border-radius: 99px;
-      margin-bottom: 28px;
-      animation: fadeUp .5s ease both;
-    }
+    #hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding-top: 64px; }
+    .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0d1117 0%, #0f2030 50%, #0d1117 100%); }
+    .hero-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(45,156,110,.18) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; }
+    .hero-glow-2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(240,163,35,.08) 0%, transparent 70%); bottom: 0; left: 200px; pointer-events: none; }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; padding: 80px 0 60px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: var(--green-dim); border: 1px solid rgba(45,156,110,.3); color: #6eddb3; font-size: .8rem; font-weight: 500; padding: 6px 14px; border-radius: 99px; margin-bottom: 28px; animation: fadeUp .5s ease both; }
     .badge svg { width: 14px; height: 14px; }
-    h1 {
-      font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.8rem);
-      font-weight: 800; line-height: 1.1; letter-spacing: -.02em;
-      color: var(--text); margin-bottom: 24px;
-      animation: fadeUp .5s .1s ease both;
-    }
-    h1 .accent {
-      background: linear-gradient(90deg, var(--green) 0%, #5dd4a0 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      font-size: 1.15rem; color: var(--muted); max-width: 560px;
-      margin-bottom: 40px; line-height: 1.7;
-      animation: fadeUp .5s .2s ease both;
-    }
-    .hero-cta {
-      display: flex; flex-wrap: wrap; gap: 14px;
-      margin-bottom: 56px;
-      animation: fadeUp .5s .3s ease both;
-    }
-    .btn-hero {
-      font-family: var(--font-body); font-size: 1rem; font-weight: 600;
-      color: #fff; background: var(--green); border: none; cursor: pointer;
-      padding: 14px 28px; border-radius: 10px;
-      transition: background .2s, transform .15s, box-shadow .2s;
-      display: inline-flex; align-items: center; gap: 8px;
-      box-shadow: 0 0 32px rgba(45,156,110,.25);
-    }
+    h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--text); margin-bottom: 24px; animation: fadeUp .5s .1s ease both; }
+    h1 .accent { background: linear-gradient(90deg, var(--green) 0%, #5dd4a0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 560px; margin-bottom: 40px; line-height: 1.7; animation: fadeUp .5s .2s ease both; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; animation: fadeUp .5s .3s ease both; }
+    .btn-hero { font-family: var(--font-body); font-size: 1rem; font-weight: 600; color: #fff; background: var(--green); border: none; cursor: pointer; padding: 14px 28px; border-radius: 10px; transition: background .2s, transform .15s, box-shadow .2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 32px rgba(45,156,110,.25); }
     .btn-hero:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 0 48px rgba(45,156,110,.35); }
-    .btn-hero-outline {
-      font-family: var(--font-body); font-size: 1rem; font-weight: 500;
-      color: var(--text); background: transparent;
-      border: 1px solid var(--border); cursor: pointer;
-      padding: 14px 28px; border-radius: 10px;
-      transition: border-color .2s, background .2s, transform .15s;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-    }
+    .btn-hero-outline { font-family: var(--font-body); font-size: 1rem; font-weight: 500; color: var(--text); background: transparent; border: 1px solid var(--border); cursor: pointer; padding: 14px 28px; border-radius: 10px; transition: border-color .2s, background .2s, transform .15s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
     .btn-hero-outline:hover { border-color: rgba(255,255,255,.25); background: var(--card); transform: translateY(-2px); }
-    .hero-stats {
-      display: flex; gap: 40px;
-      animation: fadeUp .5s .4s ease both;
-    }
-    .hero-stat .value {
-      font-family: var(--font-display); font-size: 1.75rem; font-weight: 700;
-      color: var(--text);
-    }
-    .hero-stat .label {
-      font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
-    }
+    .hero-stats { display: flex; gap: 40px; animation: fadeUp .5s .4s ease both; }
+    .hero-stat .value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .hero-stat .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 
     /* ── SECTION SHARED ── */
     section { position: relative; }
-    .section-label {
-      font-size: .75rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--green); margin-bottom: 12px;
-    }
-    h2 {
-      font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-      font-weight: 700; line-height: 1.2; letter-spacing: -.01em;
-      color: var(--text); margin-bottom: 16px;
-    }
+    .section-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--green); margin-bottom: 12px; }
+    h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 700; line-height: 1.2; letter-spacing: -.01em; color: var(--text); margin-bottom: 16px; }
     .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 520px; line-height: 1.7; }
     .section-header { text-align: center; margin-bottom: 64px; }
     .section-header .section-sub { margin: 0 auto; }
@@ -225,61 +215,29 @@
     /* ── PROBLEM ── */
     #problema { padding: 100px 0; background: var(--dark); }
     .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 32px;
-      transition: border-color .25s, transform .25s, background .25s;
-    }
-    .card:hover {
-      border-color: rgba(45,156,110,.3); transform: translateY(-4px);
-      background: rgba(45,156,110,.04);
-    }
-    .card-icon {
-      width: 48px; height: 48px; border-radius: 10px;
-      background: rgba(255,255,255,.05);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; transition: background .25s;
-    }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; transition: border-color .25s, transform .25s, background .25s; }
+    .card:hover { border-color: rgba(45,156,110,.3); transform: translateY(-4px); background: rgba(45,156,110,.04); }
+    .card-icon { width: 48px; height: 48px; border-radius: 10px; background: rgba(255,255,255,.05); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; transition: background .25s; }
     .card:hover .card-icon { background: var(--green-dim); }
     .card-icon svg { width: 22px; height: 22px; color: var(--muted); transition: color .25s; }
     .card:hover .card-icon svg { color: var(--green-light); }
-    .card h3 {
-      font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
-      color: var(--text); margin-bottom: 10px;
-    }
+    .card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
     .card p { font-size: .9rem; color: var(--muted); line-height: 1.7; }
 
     /* ── SOLUTION ── */
     #solucao { padding: 100px 0; background: var(--dark-2); }
     .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; margin: 0 auto; }
-    .feature-card {
-      display: flex; gap: 18px; padding: 24px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: border-color .25s, transform .2s;
-    }
+    .feature-card { display: flex; gap: 18px; padding: 24px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color .25s, transform .2s; }
     .feature-card:hover { border-color: rgba(45,156,110,.25); transform: translateY(-2px); }
-    .feature-icon {
-      width: 44px; height: 44px; border-radius: 10px;
-      background: var(--green-dim);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .feature-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--green-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .feature-icon svg { width: 20px; height: 20px; color: var(--green-light); }
-    .feature-card h3 {
-      font-family: var(--font-display); font-size: 1rem; font-weight: 600;
-      color: var(--text); margin-bottom: 6px;
-    }
+    .feature-card h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
     .feature-card p { font-size: .875rem; color: var(--muted); line-height: 1.65; }
 
     /* ── LEAD FORM ── */
     #interesse { padding: 100px 0; background: var(--dark); }
     .form-wrap { max-width: 480px; margin: 0 auto; text-align: center; }
-    .form-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-dim); border: 1px solid rgba(45,156,110,.25);
-      color: var(--green-light); font-size: .8rem; font-weight: 500;
-      padding: 6px 14px; border-radius: 99px; margin-bottom: 24px;
-    }
+    .form-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--green-dim); border: 1px solid rgba(45,156,110,.25); color: var(--green-light); font-size: .8rem; font-weight: 500; padding: 6px 14px; border-radius: 99px; margin-bottom: 24px; }
     .form-badge svg { width: 14px; height: 14px; }
     .form-wrap h2 { margin-bottom: 12px; }
     .form-wrap .section-sub { margin-bottom: 8px; }
@@ -287,34 +245,16 @@
     form { text-align: left; }
     .form-group { margin-bottom: 16px; }
     label { display: block; font-size: .875rem; font-weight: 500; color: var(--text); margin-bottom: 6px; }
-    input[type="text"], input[type="email"] {
-      width: 100%; padding: 11px 14px; border-radius: 9px;
-      background: rgba(255,255,255,.05); border: 1px solid var(--border);
-      color: var(--text); font-family: var(--font-body); font-size: .9rem;
-      transition: border-color .2s, background .2s; outline: none;
-    }
-    input[type="text"]:focus, input[type="email"]:focus {
-      border-color: var(--green); background: rgba(45,156,110,.06);
-    }
+    input[type="text"], input[type="email"] { width: 100%; padding: 11px 14px; border-radius: 9px; background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: .9rem; transition: border-color .2s, background .2s; outline: none; }
+    input[type="text"]:focus, input[type="email"]:focus { border-color: var(--green); background: rgba(45,156,110,.06); }
     input::placeholder { color: rgba(122,143,168,.6); }
-    .btn-submit {
-      width: 100%; padding: 13px; border-radius: 9px;
-      background: var(--green); color: #fff;
-      font-family: var(--font-body); font-size: .95rem; font-weight: 600;
-      border: none; cursor: pointer; margin-top: 4px;
-      transition: background .2s, transform .15s, box-shadow .2s;
-      box-shadow: 0 0 28px rgba(45,156,110,.2);
-    }
+    .btn-submit { width: 100%; padding: 13px; border-radius: 9px; background: var(--green); color: #fff; font-family: var(--font-body); font-size: .95rem; font-weight: 600; border: none; cursor: pointer; margin-top: 4px; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 0 28px rgba(45,156,110,.2); }
     .btn-submit:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 0 40px rgba(45,156,110,.3); }
     .form-disclaimer { font-size: .75rem; color: var(--muted); text-align: center; margin-top: 12px; }
-    .success-box {
-      display: none; text-align: center; padding: 40px 32px;
-      background: var(--card); border: 1px solid rgba(45,156,110,.25);
-      border-radius: var(--radius);
-    }
+    .success-box { display: none; text-align: center; padding: 40px 32px; background: var(--card); border: 1px solid rgba(45,156,110,.25); border-radius: var(--radius); }
     .success-box.show { display: block; }
     .success-box svg { width: 52px; height: 52px; color: var(--green-light); margin-bottom: 16px; }
-    .success-box h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+    .success-box h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
     .success-box p { font-size: .9rem; color: var(--muted); }
     .success-box strong { color: var(--text); }
 
@@ -322,36 +262,18 @@
     #parceiros { padding: 100px 0; background: var(--dark-2); }
     .partners-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 900px; margin: 0 auto; }
     .partners-left .section-sub { margin-bottom: 32px; }
-    .partner-card {
-      display: flex; gap: 16px; padding: 20px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); margin-bottom: 14px;
-      transition: border-color .2s, transform .2s;
-    }
+    .partner-card { display: flex; gap: 16px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; transition: border-color .2s, transform .2s; }
     .partner-card:last-child { margin-bottom: 0; }
     .partner-card:hover { border-color: rgba(45,156,110,.2); transform: translateX(4px); }
-    .partner-icon {
-      width: 40px; height: 40px; border-radius: 8px;
-      background: var(--green-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .partner-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--green-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .partner-icon svg { width: 18px; height: 18px; color: var(--green-light); }
-    .partner-card h3 { font-family: var(--font-display); font-size: .95rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .partner-card h3 { font-size: .95rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
     .partner-card p { font-size: .82rem; color: var(--muted); line-height: 1.55; }
 
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      background: var(--dark); padding: 48px 0 32px;
-    }
-    .footer-inner {
-      display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: space-between; gap: 24px; margin-bottom: 32px;
-    }
-    .footer-logo {
-      display: flex; align-items: center; gap: 8px;
-      font-family: var(--font-display); font-weight: 700; font-size: 1rem;
-      color: var(--text); text-decoration: none;
-    }
+    footer { border-top: 1px solid var(--border); background: var(--dark); padding: 48px 0 32px; }
+    .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; color: var(--text); text-decoration: none; }
     .footer-logo svg { color: var(--green); }
     .footer-copy { font-size: .8rem; color: var(--muted); text-align: center; max-width: 380px; line-height: 1.6; }
     .footer-links { display: flex; gap: 24px; }
@@ -360,34 +282,15 @@
     .footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; text-align: center; font-size: .75rem; color: var(--muted); }
 
     /* ── MODAL ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center; padding: 24px;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.7); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 24px; }
     .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--dark-3); border: 1px solid var(--border);
-      border-radius: 18px; padding: 40px 36px; max-width: 420px; width: 100%;
-      position: relative; animation: modalIn .25s ease;
-    }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: none; border: none; color: var(--muted); cursor: pointer;
-      padding: 4px; border-radius: 6px; transition: color .2s, background .2s;
-    }
+    .modal { background: var(--dark-3); border: 1px solid var(--border); border-radius: 18px; padding: 40px 36px; max-width: 420px; width: 100%; position: relative; animation: modalIn .25s ease; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 6px; transition: color .2s, background .2s; }
     .modal-close:hover { color: var(--text); background: var(--card); }
     .modal-close svg { width: 18px; height: 18px; display: block; }
-    .modal-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: var(--green-dim); display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px;
-    }
+    .modal-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--green-dim); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
     .modal-icon svg { width: 24px; height: 24px; color: var(--green-light); }
-    .modal h3 {
-      font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;
-      text-align: center; margin-bottom: 10px;
-    }
+    .modal h3 { font-size: 1.25rem; font-weight: 700; text-align: center; margin-bottom: 10px; }
     .modal-desc { font-size: .9rem; color: var(--muted); text-align: center; line-height: 1.65; margin-bottom: 24px; }
     .modal input[type="email"] { margin-bottom: 12px; }
     .modal-success { display: none; text-align: center; padding: 8px 0; }
@@ -397,19 +300,20 @@
     .modal-success p { font-size: .875rem; color: var(--muted); }
     .modal-success strong { color: var(--text); }
 
+    /* ── MOBILE PLATFORM ── */
+    #plataforma_mobile { padding: 100px 0; background: var(--dark); }
+    .mobile-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    .mobile-compare-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .mobile-compare-label { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; }
+    .mobile-label-bad { background: rgba(232,76,76,.12); border: 1px solid rgba(232,76,76,.25); color: #e84c4c; }
+    .mobile-label-good { background: rgba(45,156,110,.12); border: 1px solid rgba(45,156,110,.25); color: var(--green-light); }
+    .mobile-frame-wrap { width: 100%; max-width: 380px; height: 640px; border-radius: 28px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 24px 64px rgba(0,0,0,.45); position: relative; }
+    .mobile-frame-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
     /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(.96) translateY(8px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .reveal {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity .55s ease, transform .55s ease;
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes modalIn { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
     .reveal.visible { opacity: 1; transform: none; }
     .reveal-delay-1 { transition-delay: .1s; }
     .reveal-delay-2 { transition-delay: .2s; }
@@ -427,422 +331,138 @@
       .footer-inner { flex-direction: column; text-align: center; }
       .footer-links { justify-content: center; }
       .gate-card { padding: 36px 28px; }
+      .mobile-compare-grid { grid-template-columns: 1fr; gap: 40px; }
+      .mobile-frame-wrap { max-width: 100%; height: 580px; }
     }
     @media (max-width: 480px) {
       .hero-cta { flex-direction: column; }
       .btn-hero, .btn-hero-outline { width: 100%; justify-content: center; }
     }
-
-    /* ── PLATAFORMA MOBILE ── */
-    #plataforma_mobile { padding: 100px 0; background: var(--dark);}
-    .mobile-compare-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      align-items: start;
-    }
-    .mobile-compare-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    .mobile-compare-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: .8rem;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 99px;
-    }
-    .mobile-label-bad {
-      background: rgba(232,76,76,.12);
-      border: 1px solid rgba(232,76,76,.25);
-      color: #e84c4c;
-    }
-    .mobile-label-good {
-      background: rgba(45,156,110,.12);
-      border: 1px solid rgba(45,156,110,.25);
-      color: var(--green-light);
-    }
-    .mobile-frame-wrap {
-      width: 100%;
-      max-width: 380px;
-      height: 640px;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 24px 64px rgba(0,0,0,.45);
-      position: relative;
-    }
-    .mobile-frame-wrap iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-    @media (max-width: 860px) {
-      .mobile-compare-grid { grid-template-columns: 1fr; gap: 40px; }
-      .mobile-frame-wrap { max-width: 100%; height: 580px; }
-    }
   </style>
 </head>
 <body>
 
-<!-- ══ PAGE CONTENT ══ -->
-<div id="page-content">
+<!-- ══ AES-256 PASSWORD GATE ══ -->
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-heading">
+  <div class="gate-glow"></div>
+  <div class="gate-glow-2"></div>
+  <div class="gate-card">
 
-<!-- ══ NAVBAR ══ -->
-<nav>
-  <div class="container">
-    <a href="#" class="nav-logo">
+    <div class="gate-logo">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       SolarSense
-    </a>
-    <div class="nav-links">
-      <a href="#problema">Problema</a>
-      <a href="#solucao">Solução</a>
-      <a href="#interesse">Lista de Espera</a>
-      <a href="#parceiros">Parceiros</a>
     </div>
-    <div class="nav-actions">
-      <button class="btn-ghost" onclick="openModal('signin')">Acessar plataforma</button>
-      <a href="#interesse" class="btn-primary">Solicitar demonstração</a>
+
+    <div class="gate-lock">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
     </div>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <svg id="menu-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-  </div>
-</nav>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobile-menu">
-  <a href="#problema" onclick="closeMenu()">Problema</a>
-  <a href="#solucao" onclick="closeMenu()">Solução</a>
-  <a href="#interesse" onclick="closeMenu()">Lista de Espera</a>
-  <a href="#parceiros" onclick="closeMenu()">Parceiros</a>
-  <button onclick="openModal('signin'); closeMenu()">Acessar plataforma</button>
-  <button class="mobile-btn-primary" onclick="openModal('demo'); closeMenu()">Solicitar demonstração</button>
-</div>
+    <h1 id="gate-heading">Acesso restrito</h1>
+    <p>Este conteúdo é privado. Insira a senha para continuar.</p>
 
-<!-- ══ HERO ══ -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow-2"></div>
-  <div class="container">
-    <div class="hero-content">
-      <div class="badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Projeto acadêmico — USP
-      </div>
-      <h1>
-        Monitoramento inteligente para
-        <span class="accent"> Sistemas Fotovoltaicos </span>
-        de Geração Distribuida
-      </h1>
-      <p class="hero-sub">
-        Sistema de alta confiabilidade para avaliar a eficiência do seu sistema fotovoltaico em tempo real. Reduza perdas, previna falhas, otimize a geração e tome decisões baseadas em dados.
-      </p>
-      <div class="hero-cta">
-        <button class="btn-hero" onclick="openModal('demo')">
-          Solicitar demonstração
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    <div class="gate-input-wrap">
+      <label for="gate-password">Senha</label>
+      <div class="gate-input-row">
+        <input type="password" id="gate-password" placeholder="••••••••"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') submitGate()" />
+        <button class="toggle-vis" onclick="toggleVisibility()" aria-label="Mostrar/ocultar senha" tabindex="-1">
+          <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
-        <a href="#solucao" class="btn-hero-outline">Conheça a solução</a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ══ PROBLEM ══ -->
-<section id="problema">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-label reveal">O problema</p>
-      <h2 class="reveal reveal-delay-1">Energia solar sem inteligência<br>não tem garantia de performance</h2>
-      <p class="section-sub reveal reveal-delay-2">Empresas em São Paulo investem milhões em energia solar, mas não possuem a capacidade de calcular a performance dos seus sistemas.</p>
+    <div id="gate-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="gate-error-msg">Senha incorreta. Tente novamente.</span>
     </div>
-    <div class="cards-grid">
-      <div class="card reveal">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <h3>Perdas financeiras ocultas</h3>
-        <p>Módulos fotovoltaicos degradados ou com defeitos podem comprometer substancialmente a capacidade de geração, gerando prejuízos significativos.</p>
-      </div>
-      <div class="card reveal reveal-delay-1">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </div>
-        <h3>Monitoramento insuficiente</h3>
-        <p>A grande maioria das instalações comerciais e industriais não possui ferramentas adequadas para monitorar a performance real do sistema em tempo real.</p>
-      </div>
-      <div class="card reveal reveal-delay-2">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
-        <h3>Manutenção Corretiva ou Preditiva?</h3>
-        <p>Sem dados precisos, a manutenção ocorre de forma corretiva — somente após falhas evidentes — aumentando custos, a segurança e o tempo de inatividade dos sistemas.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══ SOLUTION ══ -->
-<section id="solucao">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-label reveal">Nossa solução</p>
-      <h2 class="reveal reveal-delay-1">Sistema inteligente para<br> cálculo da performance do sistema fotovoltaico</h2>
-      <p class="section-sub reveal reveal-delay-2">Um equipamento compacto e acessível que transforma dados brutos em informação confiável para a sua tomada de decisão.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div>
-          <h3>Performance em tempo real</h3>
-          <p>Meça irradiância, temperatura, energia injetada a cada segundo. Identifique quedas de eficiência instantaneamente.</p>
-        </div>
-      </div>
-      <div class="feature-card reveal reveal-delay-1">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div>
-          <h3>Diagnóstico inteligente</h3>
-          <p>Algoritmos que comparam a performance real com a esperada, apontando painéis com problemas antes que causem prejuízo.</p>
-        </div>
-      </div>
-      <div class="feature-card reveal reveal-delay-1">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1010 10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <div>
-          <h3>Redução de custos</h3>
-          <p>Manutenção preditiva reduz custos operacionais em até 40% e aumenta a vida útil dos equipamentos solares.</p>
-        </div>
-      </div>
-      <div class="feature-card reveal reveal-delay-2">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
-        </div>
-        <div>
-          <h3>Decisões baseadas em dados</h3>
-          <p>Dashboards claros e relatórios automáticos para gestores tomarem decisões informadas sobre expansão e manutenção.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ MOBILE PLATFORM ══ -->
-<section id="plataforma_mobile">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-label reveal">Plataforma Mobile</p>
-      <h2 class="reveal reveal-delay-1">Monitore seus painéis<br>na palma da mão</h2>
-      <p class="section-sub reveal reveal-delay-2">Compare em tempo real o desempenho de sistemas com e sem monitoramento inteligente. Identifique falhas antes que causem prejuízo.</p>
-    </div>
-    <div class="mobile-compare-grid reveal reveal-delay-1">
-      <div class="mobile-compare-col">
-        <div class="mobile-compare-label mobile-label-bad">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          Baixa Performance
-        </div>
-        <div class="mobile-frame-wrap">
-          <iframe src="monitor-bad.html" title="Monitor com baixa eficiência" scrolling="yes" loading="lazy"></iframe>
-        </div>
-      </div>
-      <div class="mobile-compare-col">
-        <div class="mobile-compare-label mobile-label-good">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Boa Performance
-        </div>
-        <div class="mobile-frame-wrap">
-          <iframe src="monitor-good.html" title="Monitor com alta eficiência" scrolling="yes" loading="lazy"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ PARTNERS ══ -->
-<section id="parceiros">
-  <div class="container">
-    <div class="partners-grid">
-      <div class="partners-left">
-        <p class="section-label reveal">Parceiros</p>
-        <h2 class="reveal">Construa conosco o futuro<br>da energia solar</h2>
-        <p class="section-sub reveal">Buscamos empresas industriais e comerciais em São Paulo interessadas em colaborar no desenvolvimento e validação do nosso produto. Seja parceiro e tenha acesso prioritário à tecnologia.</p>
-        <div style="margin-top:32px" class="reveal">
-          <button class="btn-primary" onclick="openModal('demo')" style="padding:13px 26px;font-size:.95rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-            Quero ser parceiro
-          </button>
-        </div>
-      </div>
-      <div class="partners-right">
-        <div class="partner-card reveal">
-          <div class="partner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-          </div>
-          <div>
-            <h3>Indústrias</h3>
-            <p>Grandes instalações solares em telhados industriais que necessitam de monitoramento contínuo.</p>
-          </div>
-        </div>
-        <div class="partner-card reveal reveal-delay-1">
-          <div class="partner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div>
-            <h3>Comércios</h3>
-            <p>Redes comerciais com múltiplas unidades e sistemas fotovoltaicos distribuídos.</p>
-          </div>
-        </div>
-        <div class="partner-card reveal reveal-delay-2">
-          <div class="partner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          </div>
-          <div>
-            <h3>Integradores</h3>
-            <p>Empresas de energia solar que buscam diferenciar seus serviços com monitoramento avançado.</p>
-          </div>
-        </div>
-        <div class="partner-card reveal reveal-delay-2">
-          <div class="partner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          </div>
-          <div>
-            <h3>Perícia e Laudos</h3>
-            <p>Especialistas tem a oportunidade de validar suas perícias e laudos com informações aceitas judicialmente.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ LEAD FORM ══ -->
-<section id="interesse">
-  <div class="container">
-    <div class="form-wrap">
-      <div class="form-badge reveal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Lista de interesse
-      </div>
-      <h2 class="reveal">Seja um dos primeiros<br>a testar</h2>
-      <p class="section-sub reveal">O SolarSense ainda está em desenvolvimento. Cadastre-se para receber novidades e ter acesso antecipado quando lançarmos.</p>
-      <p class="form-note reveal">Projeto em estágio inicial — estamos validando o interesse do mercado.</p>
-
-      <div id="lead-form-wrap">
-        <form id="lead-form" onsubmit="submitLead(event)" class="reveal">
-          <div class="form-group">
-            <label for="lead-name">Nome</label>
-            <input type="text" id="lead-name" placeholder="Seu nome completo" required />
-          </div>
-          <div class="form-group">
-            <label for="lead-email">E-mail</label>
-            <input type="email" id="lead-email" placeholder="seu@email.com" required />
-          </div>
-          <button type="submit" class="btn-submit">Entrar na lista de espera</button>
-          <p class="form-disclaimer">Seus dados não serão compartilhados. Usaremos apenas para informar sobre o lançamento.</p>
-        </form>
-        <div class="success-box" id="lead-success">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <h3>Cadastro realizado!</h3>
-          <p id="lead-success-msg">Obrigado! Entraremos em contato assim que tivermos novidades.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FOOTER ══ -->
-<footer>
-  <div class="container">
-    <div class="footer-inner">
-      <a href="#" class="footer-logo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        SolarSense
-      </a>
-      <p class="footer-copy">Projeto desenvolvido como parte da disciplina de Empreendedorismo Científico — Universidade de São Paulo (USP).</p>
-      <div class="footer-links">
-        <a href="#">Política de Privacidade</a>
-        <a href="#">Contato</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      © <span id="year"></span> SolarSense. Protótipo acadêmico — produto em desenvolvimento.
-    </div>
-  </div>
-</footer>
-
-<!-- ══ MODAL ══ -->
-<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
-  <div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="closeModal()" aria-label="Fechar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <button class="gate-btn" id="gate-submit-btn" onclick="submitGate()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 01-4 4H4"/></svg>
+      Entrar
     </button>
-    <div class="modal-form-content" id="modal-form-content">
-      <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
-      <h3 id="modal-title">Solicitar demonstração</h3>
-      <p class="modal-desc" id="modal-desc">Nosso produto ainda está em fase de desenvolvimento. Deixe seu e-mail e entraremos em contato assim que a demonstração estiver disponível.</p>
-      <input type="email" id="modal-email" placeholder="seu@email.com" />
-      <button class="btn-submit" onclick="submitModal()">Quero ser avisado</button>
-    </div>
-    <div class="modal-success" id="modal-success">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <h3>Anotado!</h3>
-      <p>Enviaremos novidades para <strong id="modal-confirmed-email"></strong>. Obrigado pelo interesse!</p>
-      <button class="btn-outline" onclick="closeModal()" style="margin-top:16px; color:var(--text); border-color:var(--border); background:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-family:var(--font-body); font-size:.875rem; font-weight:500; transition: background .2s, border-color .2s;">Fechar</button>
+
+    <p class="gate-attempts" id="gate-attempts-msg"></p>
+
+    <div class="aes-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Protegido por AES-256-CBC + PBKDF2
     </div>
   </div>
 </div>
 
-</div><!-- end #page-content -->
+<!-- ══ PAGE CONTENT (injected after AES decrypt) ══ -->
+<div id="page-content"></div>
 
+<!-- ══ ENCRYPTED PAYLOAD ══ -->
 <script>
-  /* ══════════════════════════════════════════
-     PASSWORD GATE
-     ↓ Change the password below ↓
-  ══════════════════════════════════════════ */
-  const CORRECT_PASSWORD = 'solarsense2026';
-  /* ══════════════════════════════════════════ */
+  /* AES-256-CBC encrypted content — decrypted client-side via Web Crypto API */
+  const ENCRYPTED = {"ct":"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","iv":"9374fe5b5b896cb660f2869703383944","salt":"SolarSenseSalt2026!"};
 
   const MAX_ATTEMPTS = 5;
   let attempts = 0;
   let locked = false;
-  let lockTimeout = null;
   let pwVisible = false;
 
-  function submitGate() {
+  /* Derive AES key using PBKDF2 via Web Crypto API */
+  async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: enc.encode(salt), iterations: 100000, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-CBC', length: 256 },
+      false,
+      ['decrypt']
+    );
+  }
+
+  /* Hex string -> Uint8Array */
+  function hexToBytes(hex) {
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return bytes;
+  }
+
+  /* Base64 -> ArrayBuffer */
+  function b64toBuffer(b64) {
+    const bin = atob(b64);
+    const buf = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+    return buf.buffer;
+  }
+
+  async function submitGate() {
     if (locked) return;
 
     const input = document.getElementById('gate-password');
+    const btn = document.getElementById('gate-submit-btn');
     const errorEl = document.getElementById('gate-error');
-    const attemptsEl = document.getElementById('gate-attempts-msg');
-    const entered = input.value;
+    const password = input.value;
 
-    if (!entered) {
-      showGateError('Por favor, insira a senha.');
-      input.focus();
-      return;
-    }
+    if (!password) { showGateError('Por favor, insira a senha.'); input.focus(); return; }
 
-    if (entered === CORRECT_PASSWORD) {
-      errorEl.classList.remove('show');
-      unlockPage();
-    } else {
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Verificando…';
+
+    try {
+      const key = await deriveKey(password, ENCRYPTED.salt);
+      const iv = hexToBytes(ENCRYPTED.iv);
+      const ciphertext = b64toBuffer(ENCRYPTED.ct);
+
+      const decrypted = await crypto.subtle.decrypt(
+        { name: 'AES-CBC', iv },
+        key,
+        ciphertext
+      );
+
+      const html = new TextDecoder().decode(decrypted);
+      unlockPage(html);
+
+    } catch (err) {
+      /* Decryption failed = wrong password */
       attempts++;
       input.classList.add('error');
       setTimeout(() => input.classList.remove('error'), 400);
@@ -853,26 +473,31 @@
       if (attempts >= MAX_ATTEMPTS) {
         locked = true;
         input.disabled = true;
-        document.querySelector('.gate-btn').disabled = true;
+        btn.disabled = true;
         showGateError('Muitas tentativas. Aguarde 30 segundos.');
-        attemptsEl.innerHTML = '';
-        lockTimeout = setTimeout(() => {
-          locked = false;
-          attempts = 0;
-          input.disabled = false;
-          document.querySelector('.gate-btn').disabled = false;
+        document.getElementById('gate-attempts-msg').innerHTML = '';
+        setTimeout(() => {
+          locked = false; attempts = 0;
+          input.disabled = false; btn.disabled = false;
           errorEl.classList.remove('show');
-          attemptsEl.innerHTML = '';
-          input.focus();
+          document.getElementById('gate-attempts-msg').innerHTML = '';
+          resetBtn(); input.focus();
         }, 30000);
       } else {
         showGateError('Senha incorreta. Tente novamente.');
         if (remaining <= 2) {
-          attemptsEl.innerHTML = `<span>${remaining}</span> tentativa${remaining === 1 ? '' : 's'} restante${remaining === 1 ? '' : 's'}`;
+          document.getElementById('gate-attempts-msg').innerHTML =
+            '<span>' + remaining + '</span> tentativa' + (remaining === 1 ? '' : 's') + ' restante' + (remaining === 1 ? '' : 's');
         }
-        input.focus();
+        resetBtn(); input.focus();
       }
     }
+  }
+
+  function resetBtn() {
+    const btn = document.getElementById('gate-submit-btn');
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 01-4 4H4"/></svg> Entrar';
   }
 
   function showGateError(msg) {
@@ -881,18 +506,14 @@
     el.classList.add('show');
   }
 
-  function unlockPage() {
+  function unlockPage(html) {
     const gate = document.getElementById('gate');
     const content = document.getElementById('page-content');
-
-    gate.classList.add('hidden');
+    content.innerHTML = html;
     content.classList.add('visible');
+    gate.classList.add('hidden');
     document.body.style.overflow = '';
-
-    setTimeout(() => {
-      gate.style.display = 'none';
-      initPage();
-    }, 420);
+    setTimeout(() => { gate.style.display = 'none'; initPage(); }, 420);
   }
 
   function toggleVisibility() {
@@ -905,49 +526,34 @@
       : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 
-  /* ══ PAGE INIT (runs after unlock) ══ */
+  /* ══ PAGE INIT ══ */
   function initPage() {
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
       });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
     const navEl = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
+    if (navEl) window.addEventListener('scroll', () => {
       navEl.style.boxShadow = window.scrollY > 20 ? '0 4px 32px rgba(0,0,0,.4)' : 'none';
     });
   }
 
   /* ══ MOBILE MENU ══ */
   let menuOpen = false;
-  function toggleMenu() {
-    menuOpen = !menuOpen;
-    document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
-  }
-  function closeMenu() {
-    menuOpen = false;
-    document.getElementById('mobile-menu').classList.remove('open');
-  }
+  function toggleMenu() { menuOpen = !menuOpen; document.getElementById('mobile-menu').classList.toggle('open', menuOpen); }
+  function closeMenu() { menuOpen = false; document.getElementById('mobile-menu').classList.remove('open'); }
 
   /* ══ MODAL ══ */
   const modalData = {
-    demo: {
-      title: 'Solicitar demonstração',
-      desc: 'Nosso produto ainda está em fase de desenvolvimento. Deixe seu e-mail e entraremos em contato assim que a demonstração estiver disponível.'
-    },
-    signin: {
-      title: 'Plataforma em construção',
-      desc: 'A área do cliente ainda não está disponível. Cadastre seu e-mail para ter acesso prioritário quando lançarmos.'
-    }
+    demo: { title: 'Solicitar demonstração', desc: 'Nosso produto ainda está em fase de desenvolvimento. Deixe seu e-mail e entraremos em contato assim que a demonstração estiver disponível.' },
+    signin: { title: 'Plataforma em construção', desc: 'A área do cliente ainda não está disponível. Cadastre seu e-mail para ter acesso prioritário quando lançarmos.' }
   };
-
   function openModal(type) {
     const data = modalData[type] || modalData.demo;
     document.getElementById('modal-title').textContent = data.title;
@@ -959,16 +565,8 @@
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('modal-email').focus(), 50);
   }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function closeModalOutside(e) {
-    if (e.target === document.getElementById('modal')) closeModal();
-  }
-
+  function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
+  function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
   function submitModal() {
     const email = document.getElementById('modal-email').value.trim();
     if (!email || !email.includes('@')) { document.getElementById('modal-email').focus(); return; }
@@ -976,10 +574,7 @@
     document.getElementById('modal-form-content').style.display = 'none';
     document.getElementById('modal-success').classList.add('show');
   }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
   /* ══ LEAD FORM ══ */
   function submitLead(e) {
@@ -988,15 +583,12 @@
     const email = document.getElementById('lead-email').value.trim();
     if (!name || !email) return;
     document.getElementById('lead-form').style.display = 'none';
-    const msg = `Obrigado, ${name}! Entraremos em contato pelo e-mail <strong style="color:var(--text)">${email}</strong> assim que tivermos novidades.`;
-    document.getElementById('lead-success-msg').innerHTML = msg;
+    document.getElementById('lead-success-msg').innerHTML = 'Obrigado, ' + name + '! Entraremos em contato pelo e-mail <strong style="color:var(--text)">' + email + '</strong> assim que tivermos novidades.';
     document.getElementById('lead-success').classList.add('show');
   }
 
-  /* Auto-focus gate password on load */
-  window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('gate-password').focus();
-  });
+  /* Auto-focus */
+  window.addEventListener('DOMContentLoaded', () => { document.getElementById('gate-password').focus(); });
 </script>
 </body>
 </html>
