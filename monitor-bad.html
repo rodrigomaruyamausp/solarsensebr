@@ -9,16 +9,16 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:          #100909;
-    --card:        #1a0f0f;
-    --card2:       #1f1111;
-    --border:      #2e1a1a;
-    --primary:     #e84c4c;
-    --primary-dim: rgba(232,76,76,.12);
-    --text:        #f4eeee;
-    --muted:       #80575a;
-    --status-lo:   #e84c4c;
-    --status-lo-bg:#280d0d;
+    --bg:          #09100f;
+    --card:        #0f1a18;
+    --card2:       #111f1c;
+    --border:      #1a2e2a;
+    --primary:     #2bbd7e;
+    --primary-dim: rgba(43,189,126,.12);
+    --text:        #eef4f2;
+    --muted:       #5a8070;
+    --status-bg:   #0d2820;
+    --status-red:  #e84c4c;
     --font: 'Plus Jakarta Sans', sans-serif;
     --radius: 18px;
   }
@@ -55,22 +55,22 @@
   /* STATUS BANNER */
   .status-banner {
     border-radius: var(--radius); padding: 18px 20px;
-    background: var(--status-lo-bg);
-    border: 1px solid rgba(232,76,76,.25);
+    background: var(--status-bg);
+    border: 1px solid rgba(43,189,126,.2);
     animation: fadeUp .4s ease both;
   }
   .banner-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .dot {
     width: 10px; height: 10px; border-radius: 50%;
-    background: var(--status-lo); flex-shrink: 0;
+    background: var(--primary); flex-shrink: 0;
     animation: pulse 1.2s ease-in-out infinite;
   }
-  .banner-icon { width: 18px; height: 18px; color: var(--status-lo); }
-  .banner-title { font-size: 1rem; font-weight: 700; color: var(--status-lo); }
+  .banner-icon { width: 18px; height: 18px; color: var(--primary); }
+  .banner-title { font-size: 1rem; font-weight: 700; color: var(--status-red); }
   .banner-msg { font-size: .82rem; opacity: .75; line-height: 1.6; margin-bottom: 12px; }
   .efficiency-row { display: flex; align-items: baseline; gap: 10px; }
   .eff-label { font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .55; }
-  .eff-value { font-size: 1.6rem; font-weight: 800; color: var(--status-lo); }
+  .eff-value { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
 
   /* PARAM GRID */
   .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -287,9 +287,9 @@
     <p class="gauge-title">Indicador de Eficiência</p>
     <div class="gauge-svg-wrap">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="#2e1a1a" stroke-width="9"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#1a2e2a" stroke-width="9"/>
         <circle id="gaugeArc" cx="50" cy="50" r="42"
-          fill="none" stroke="#e84c4c" stroke-width="9" stroke-linecap="round"/>
+          fill="none" stroke="#2bbd7e" stroke-width="9" stroke-linecap="round"/>
       </svg>
       <div class="gauge-label">43%</div>
     </div>
@@ -385,8 +385,8 @@
     const ys = DATA.map(d   => pad.top  + ch - (d.v / MAX_V) * ch);
 
     const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-    grad.addColorStop(0, 'rgba(232,76,76,.28)');
-    grad.addColorStop(1, 'rgba(232,76,76,0)');
+    grad.addColorStop(0, 'rgba(43,189,126,.30)');
+    grad.addColorStop(1, 'rgba(43,189,126,0)');
 
     // filled area
     ctx.beginPath();
@@ -408,7 +408,7 @@
       const mx = (xs[i-1] + xs[i]) / 2;
       ctx.bezierCurveTo(mx, ys[i-1], mx, ys[i], xs[i], ys[i]);
     }
-    ctx.strokeStyle = '#e84c4c';
+    ctx.strokeStyle = '#2bbd7e';
     ctx.lineWidth   = 2.5;
     ctx.lineJoin    = 'round';
     ctx.stroke();
@@ -419,12 +419,12 @@
     ctx.textBaseline = 'middle';
     [0, 2, 4, 6, 8].forEach(v => {
       const y = pad.top + ch - (v / MAX_V) * ch;
-      ctx.fillStyle = '#805757';
+      ctx.fillStyle = '#5a8070';
       ctx.fillText(v, pad.left - 6, y);
       ctx.beginPath();
       ctx.moveTo(pad.left, y);
       ctx.lineTo(pad.left + cw, y);
-      ctx.strokeStyle = 'rgba(46,26,26,.6)';
+      ctx.strokeStyle = 'rgba(26,46,42,.55)';
       ctx.lineWidth   = 1;
       ctx.stroke();
     });
@@ -434,7 +434,7 @@
     ctx.textBaseline = 'top';
     DATA.forEach((d, i) => {
       if (i % 3 !== 0) return;
-      ctx.fillStyle = '#805757';
+      ctx.fillStyle = '#5a8070';
       ctx.fillText(d.t, xs[i], pad.top + ch + 10);
     });
   }
