@@ -52,69 +52,25 @@
   /* MAIN */
   main { padding: 0 22px; display: flex; flex-direction: column; gap: 14px; }
 
-  /* STATUS BANNER */
+/* STATUS BANNER */
   .status-banner {
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    background: #280d0d;
+    border-radius: var(--radius); padding: 18px 20px;
+    background: var(--status-lo-bg);
     border: 1px solid rgba(232,76,76,.25);
     animation: fadeUp .4s ease both;
   }
-
-  .banner-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-
+  .banner-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #e84c4c;
-    flex-shrink: 0;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--status-lo); flex-shrink: 0;
     animation: pulse 1.2s ease-in-out infinite;
   }
-
-  .banner-icon {
-    width: 18px;
-    height: 18px;
-    color: #e84c4c;
-  }
-
-  .banner-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #e84c4c;
-  }
-
-  .banner-msg {
-    font-size: .82rem;
-    opacity: .75;
-    line-height: 1.6;
-    margin-bottom: 12px;
-  }
-
-  .efficiency-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .eff-label {
-    font-size: .65rem;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    opacity: .55;
-  }
-
-  .eff-value {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #e84c4c;
-  }
+  .banner-icon { width: 18px; height: 18px; color: var(--status-lo); }
+  .banner-title { font-size: 1rem; font-weight: 700; color: var(--status-lo); }
+  .banner-msg { font-size: .82rem; opacity: .75; line-height: 1.6; margin-bottom: 12px; }
+  .efficiency-row { display: flex; align-items: baseline; gap: 10px; }
+  .eff-label { font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .55; }
+  .eff-value { font-size: 1.6rem; font-weight: 800; color: var(--status-lo); }
 
   /* PARAM GRID */
   .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
