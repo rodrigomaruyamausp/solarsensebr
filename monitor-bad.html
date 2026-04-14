@@ -9,16 +9,20 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:          #100909;
-    --card:        #1a0f0f;
-    --card2:       #1f1111;
-    --border:      #2e1a1a;
-    --primary:     #e84c4c;
-    --primary-dim: rgba(232,76,76,.12);
-    --text:        #f4eeee;
-    --muted:       #80575a;
+    /* tema geral igual ao monitor-good */
+    --bg:          #09100f;
+    --card:        #0f1a18;
+    --card2:       #111f1c;
+    --border:      #1a2e2a;
+    --primary:     #2bbd7e;
+    --primary-dim: rgba(43,189,126,.12);
+    --text:        #eef4f2;
+    --muted:       #5a8070;
+
+    /* banner vermelho restaurado */
     --status-lo:   #e84c4c;
     --status-lo-bg:#280d0d;
+
     --font: 'Plus Jakarta Sans', sans-serif;
     --radius: 18px;
   }
@@ -52,7 +56,7 @@
   /* MAIN */
   main { padding: 0 22px; display: flex; flex-direction: column; gap: 14px; }
 
-/* STATUS BANNER */
+  /* STATUS BANNER */
   .status-banner {
     border-radius: var(--radius); padding: 18px 20px;
     background: var(--status-lo-bg);
@@ -170,21 +174,21 @@
 
   <!-- STATUS BANNER -->
   <div class="status-banner">
-  <div class="banner-top">
-    <span class="dot"></span>
-    <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="15" y1="9" x2="9" y2="15"/>
-      <line x1="9" y1="9" x2="15" y2="15"/>
-    </svg>
-    <span class="banner-title">Eficiência Baixa — Atenção Necessária</span>
+    <div class="banner-top">
+      <span class="dot"></span>
+      <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      <span class="banner-title">Eficiência Baixa — Atenção Necessária</span>
+    </div>
+    <p class="banner-msg">Desempenho significativamente abaixo do esperado. Possíveis causas: sombreamento, falha no sistema ou sujeira excessiva nos painéis.</p>
+    <div class="efficiency-row">
+      <span class="eff-label">Eficiência Atual</span>
+      <span class="eff-value">43.0%</span>
+    </div>
   </div>
-  <p class="banner-msg">Desempenho significativamente abaixo do esperado. Possíveis causas: sombreamento, falha no sistema ou sujeira excessiva nos painéis.</p>
-  <div class="efficiency-row">
-    <span class="eff-label">Eficiência Atual</span>
-    <span class="eff-value">43.0%</span>
-  </div>
-</div>
 
   <!-- PARAMETER CARDS -->
   <div class="param-grid">
@@ -287,9 +291,9 @@
     <p class="gauge-title">Indicador de Eficiência</p>
     <div class="gauge-svg-wrap">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="#2e1a1a" stroke-width="9"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#1a2e2a" stroke-width="9"/>
         <circle id="gaugeArc" cx="50" cy="50" r="42"
-          fill="none" stroke="#e84c4c" stroke-width="9" stroke-linecap="round"/>
+          fill="none" stroke="#2bbd7e" stroke-width="9" stroke-linecap="round"/>
       </svg>
       <div class="gauge-label">43%</div>
     </div>
@@ -385,8 +389,8 @@
     const ys = DATA.map(d   => pad.top  + ch - (d.v / MAX_V) * ch);
 
     const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-    grad.addColorStop(0, 'rgba(232,76,76,.28)');
-    grad.addColorStop(1, 'rgba(232,76,76,0)');
+    grad.addColorStop(0, 'rgba(43,189,126,.30)');
+    grad.addColorStop(1, 'rgba(43,189,126,0)');
 
     // filled area
     ctx.beginPath();
@@ -408,7 +412,7 @@
       const mx = (xs[i-1] + xs[i]) / 2;
       ctx.bezierCurveTo(mx, ys[i-1], mx, ys[i], xs[i], ys[i]);
     }
-    ctx.strokeStyle = '#e84c4c';
+    ctx.strokeStyle = '#2bbd7e';
     ctx.lineWidth   = 2.5;
     ctx.lineJoin    = 'round';
     ctx.stroke();
@@ -419,12 +423,12 @@
     ctx.textBaseline = 'middle';
     [0, 2, 4, 6, 8].forEach(v => {
       const y = pad.top + ch - (v / MAX_V) * ch;
-      ctx.fillStyle = '#805757';
+      ctx.fillStyle = '#5a8070';
       ctx.fillText(v, pad.left - 6, y);
       ctx.beginPath();
       ctx.moveTo(pad.left, y);
       ctx.lineTo(pad.left + cw, y);
-      ctx.strokeStyle = 'rgba(46,26,26,.6)';
+      ctx.strokeStyle = 'rgba(26,46,42,.55)';
       ctx.lineWidth   = 1;
       ctx.stroke();
     });
@@ -434,7 +438,7 @@
     ctx.textBaseline = 'top';
     DATA.forEach((d, i) => {
       if (i % 3 !== 0) return;
-      ctx.fillStyle = '#805757';
+      ctx.fillStyle = '#5a8070';
       ctx.fillText(d.t, xs[i], pad.top + ch + 10);
     });
   }
