@@ -19,6 +19,8 @@
     --muted:       #5a8070;
     --status-bg:   #0d2820;
     --status-red:  #e84c4c;
+    --status-lo:   #e84c4c;
+    --status-lo-bg:#280d0d;
     --font: 'Plus Jakarta Sans', sans-serif;
     --radius: 18px;
   }
@@ -55,7 +57,7 @@
   /* STATUS BANNER */
   .status-banner {
     border-radius: var(--radius); padding: 18px 20px;
-    background: var(--status-bg);
+    background: var(--status-lo-bg);
     border: 1px solid rgba(43,189,126,.2);
     animation: fadeUp .4s ease both;
   }
@@ -70,7 +72,7 @@
   .banner-msg { font-size: .82rem; opacity: .75; line-height: 1.6; margin-bottom: 12px; }
   .efficiency-row { display: flex; align-items: baseline; gap: 10px; }
   .eff-label { font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .55; }
-  .eff-value { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+  .eff-value { font-size: 1.6rem; font-weight: 800; color: var(--status-lo); }
 
   /* PARAM GRID */
   .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
